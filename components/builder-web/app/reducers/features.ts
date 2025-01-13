@@ -25,8 +25,10 @@ export default function builds(state = initialState['features'], action) {
         .setIn(['publishers', 'azure'], !!config['enable_publisher_azure'])
         .setIn(['publishers', 'docker'], !!config['enable_publisher_docker'])
         .set('builder', !!config['enable_builder'])
+        .set('visibility', !!config['enable_visibility'])
         .set('events', !!config['enable_builder_events'])
-        .set('saasEvents', !!config['enable_builder_events_saas']);
+        .set('saasEvents', !!config['enable_builder_events_saas'])
+        .set('enableLTS', !!config['enable_lts']);
     default:
       return state;
   }

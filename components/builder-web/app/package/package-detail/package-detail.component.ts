@@ -19,6 +19,7 @@ import { parseDate, targetFrom } from '../../util';
 import { demotePackage, promotePackage } from '../../actions/index';
 import { SimpleConfirmDialog } from '../../shared/dialog/simple-confirm/simple-confirm.dialog';
 import { MatDialog } from '@angular/material';
+import { PromoteConfirmDialog } from '../../shared/dialog/promote-confirm/promote-confirm.dialog';
 
 @Component({
   selector: 'bio-package-detail',
@@ -91,25 +92,59 @@ export class PackageDetailComponent {
     });
   }
 
-  handlePromote() {
+  handlePromote(channel) {
+    let state = this.store.getState();
+    const filteredAllChannel = this.getAllChannel(channel);
+    if (state.features.enableLTS) {
     this.confirmDialog
+    .open(PromoteConfirmDialog, {
+      width: '480px',
+      data: {
+        heading: 'Confirm promote',
+        body: `Select channel to promote. Promoted artifact will be added to the selected channel.`,
+        channelList: filteredAllChannel,
+        action: 'Promote'
+      }
+    })
+    .afterClosed()
+    .subscribe((data) => {
+      if (data) {
+        const {confirmed, selectedChannel} = data;
+        if (confirmed && selectedChannel) {
+          this.updating = true;
+          let token = this.store.getState().session.token;
+          this.store.dispatch(
+            promotePackage(this.package.ident.origin, this.package.ident.name, this.package.ident.version, this.package.ident.release, this.package.target, selectedChannel, token)
+          );
+        }
+      }
+    });
+    } else {
+        this.confirmDialog
     .open(SimpleConfirmDialog, {
       width: '480px',
       data: {
         heading: 'Confirm promote',
         body: `Are you sure you want to promote this artifact? Doing so will add the artifact to the stable channel.`,
-        action: 'promote it'
+        action: 'Promote it'
       }
     })
     .afterClosed()
     .subscribe((confirmed) => {
-      if (confirmed) {
-        this.updating = true;
-        let token = this.store.getState().session.token;
-        this.store.dispatch(
-          promotePackage(this.package.ident.origin, this.package.ident.name, this.package.ident.version, this.package.ident.release, this.package.target, 'stable', token)
-        );
+        if (confirmed) {
+          this.updating = true;
+          let token = this.store.getState().session.token;
+          this.store.dispatch(
+            promotePackage(this.package.ident.origin, this.package.ident.name, this.package.ident.version, this.package.ident.release, this.package.target, 'stable', token)
+          );
       }
+    });
+    }
+  }
+
+  getAllChannel(currentChannel) {
+    return this.store.getState().origins.current.channels.filter((channel) => {
+      return channel.name !== 'unstable' && channel.name !== currentChannel && !this._channels[channel.name];
     });
   }
 
@@ -126,9 +161,11 @@ export class PackageDetailComponent {
   }
 
   promotable(pkg) {
-    return this.memberOfOrigin &&
-      pkg.channels.length > 0 &&
-      pkg.channels.indexOf('stable') === -1;
+    const originChannels = this.store.getState().origins.current.channels;
+    const hasMissingChannel = originChannels.some(originChannel =>
+      pkg.channels.indexOf(originChannel.name) === -1
+    );
+    return this.memberOfOrigin && hasMissingChannel;
   }
 
   releaseToDate(release) {

@@ -5,6 +5,7 @@ biomeConfig({
     demo_app_url: "{{cfg.demo_app_url}}",
     docs_url: "{{cfg.docs_url}}",
     enable_builder: {{cfg.enable_builder}},
+    enable_visibility: {{cfg.enable_visibility}},
     enable_publisher_amazon: {{cfg.enable_publisher_amazon}},
     enable_publisher_azure: {{cfg.enable_publisher_azure}},
     enable_publisher_docker: {{cfg.enable_publisher_docker}},
@@ -26,4 +27,5 @@ biomeConfig({
     www_url: "{{cfg.www_url}}",
     enable_builder_events: {{cfg.enable_builder_events}},
     enable_builder_events_saas: {{cfg.enable_builder_events_saas}},
+    enable_lts: {{cfg.enable_lts}},
 });
