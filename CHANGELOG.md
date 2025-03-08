@@ -3,6 +3,10 @@
 ## Unreleased
 
 #### Merged Pull Requests
+- Aligns rustfmt between Makefile and verify pipeline [#1874](https://github.com/habitat-sh/builder/pull/1874) ([jasonheath](https://github.com/jasonheath))
+- Address Markdown lint errors [#1872](https://github.com/habitat-sh/builder/pull/1872) ([jasonheath](https://github.com/jasonheath))
+- Removes support/cycle-tools and tools/merge-{databases,shards} [#1870](https://github.com/habitat-sh/builder/pull/1870) ([jasonheath](https://github.com/jasonheath))
+- Fixes adhoc workflow [#1868](https://github.com/habitat-sh/builder/pull/1868) ([sajjaphani](https://github.com/sajjaphani))
 - Remove builder worker component [#1869](https://github.com/habitat-sh/builder/pull/1869) ([jasonheath](https://github.com/jasonheath))
 - Updated LTS to  base channel support for builder [#1867](https://github.com/habitat-sh/builder/pull/1867) ([sougata-progress](https://github.com/sougata-progress))
 - moment library update [#1865](https://github.com/habitat-sh/builder/pull/1865) ([AadeshNichite](https://github.com/AadeshNichite))
